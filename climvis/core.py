@@ -130,9 +130,16 @@ def write_html(lon, lat, directory=None, zoom=None):
     # Make the plot
     png = os.path.join(directory, 'annual_cycle.png')
     df = get_cru_timeseries(lon, lat)
-    graphics.plot_annual_cycle(df, filepath=png)
-
-    outpath = os.path.join(directory, 'index.html')
+    
+    # Catch ValueError due to NaNs and exit program in case it is raised
+    try:
+        graphics.plot_annual_cycle(df, filepath=png)
+        outpath = os.path.join(directory, 'index.html')
+        
+    except ValueError:
+        print('No data available over the ocean. Try for different location!')
+        quit()
+    
     with open(cfg.html_tpl, 'r') as infile:
         lines = infile.readlines()
         out = []

@@ -109,13 +109,12 @@ def city_coord(city):
             lat = loc['lat']
             lon = loc['lon']
             elevation = loc['elevation']
-        else:
-            raise NameError('''location not listed. Please check spelling or try 
-                       again for nearest bigger city''')
-            quit()
-            
-    return lat, lon, elevation
-
+        
+    try:
+        return lat, lon, elevation
+    except UnboundLocalError:
+        print('''Location not listed. Please check spelling or try again for nearest bigger city''')
+        
 
 def get_googlemap_url(lon, lat, zoom=10):
 

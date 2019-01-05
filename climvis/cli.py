@@ -33,15 +33,23 @@ def cruvis_io(args):
         print('License: public domain')
         print('cruvis is provided "as is", without warranty of any kind')
     elif args[0] in ['-l', '--loc']:
-        if len(args) < 3:
-            print('cruvis --loc needs lon and lat parameters!')
+        if len(args) < 2:
+            print('cruvis --loc needs lon and lat parameters or city name!')
             return
-        lon, lat = float(args[1]), float(args[2])
-        html_path = climvis.write_html(lon, lat)
-        if '--no-browser' in args:
-            print('File successfully generated at: ' + html_path)
-        else:
-            webbrowser.get().open_new_tab(html_path)
+        elif len(args) == 2:
+            lat, lon, elevation = climvis.core.city_coord(args[1])
+            html_path = climvis.write_html(lon, lat)
+            if '--no-browser' in args:
+                print('File successfully generated at: ' + html_path)
+            else:
+                webbrowser.get().open_new_tab(html_path)
+        elif len(args) == 3:
+            lon, lat = float(args[1]), float(args[2])
+            html_path = climvis.write_html(lon, lat)
+            if '--no-browser' in args:
+                print('File successfully generated at: ' + html_path)
+            else:
+                webbrowser.get().open_new_tab(html_path)
     else:
         print('cruvis: command not understood. '
               'Type "cruvis --help" for usage options.')

@@ -105,12 +105,12 @@ def city_coord(city):
                            'elevation': float(row[4])})
     
     for loc in cities:
-        if loc['name'] == city:
+        if loc['name'] == city.lower():
             lat = loc['lat']
             lon = loc['lon']
             elevation = loc['elevation']
         else:
-            NameError('''location not listed. Please check spelling or try 
+            raise NameError('''location not listed. Please check spelling or try 
                        again for nearest bigger city''')
             quit()
             

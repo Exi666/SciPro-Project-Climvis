@@ -16,9 +16,9 @@ def plot_annual_cycle(df, filepath=None):
     ax.set_xlabel('Month')
     ax = ax.twinx()
     df['tmp'].plot(ax=ax, color='C3', label='Temperature')
-    ax.set_ylabel('Temperature (\00B0 C)', color='C3')
+    ax.set_ylabel('Temperature (\u00b0C)', color='C3')
     ax.tick_params('y', colors='C3')
-    title = 'Climate diagram at location ({}\00B0, {}\00B0)\nElevation: {} m a.s.l'
+    title = 'Climate diagram at location ({}\u00b0, {}\u00b0)\nElevation: {} m a.s.l'
     plt.title(title.format(df.lon[0], df.lat[0], int(z)),
               loc='left')
     plt.tight_layout()
@@ -44,8 +44,8 @@ def plot_time_line(df, filepath=None):
     plt.plot(years, temp_intercept + temp_slope * years, 'r', label='linear trend')
 
     ax.set_xlabel('Year')
-    ax.set_ylabel('Temperature (\00B0 C)')
-    title = 'Temperature time series at location ({}\00B0, {}\00B0)\nElevation: {} m a.s.l'
+    ax.set_ylabel('Temperature (\u00b0C)')
+    title = 'Temperature time series at location ({}\u00b0, {}\u00b0)\nElevation: {} m a.s.l'
     plt.title(title.format(df.lon[0], df.lat[0], int(z)), loc='left')
     plt.legend(loc='best')
 

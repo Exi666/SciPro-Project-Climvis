@@ -79,6 +79,44 @@ def get_cru_timeseries(lon, lat):
     return df
 
 
+def city_coord(city):
+    """function that returns elevation, lon and lat for city name
+    
+    Parameters:
+    ---------------
+    
+    city: string
+        name of city information should be retrieved for
+    
+    
+    Returns:
+    ---------------
+    
+    latitude, longitude and elevation of the city entered
+    """         
+    cities = []
+
+    with open(cfg.world_cities, 'r') as f:
+        reader = csv.reader(f)
+        next(reader,None)
+        for row in reader:
+            cities.append({'country': row[0], 'name': row[1].lower(), 
+                           'lat': float(row[2]), 'lon': float(row[3]),
+                           'elevation': float(row[4])})
+    
+    for loc in cities:
+        if loc['name'] == city:
+            lat = loc['lat']
+            lon = loc['lon']
+            elevation = loc['elevation']
+        else:
+            NameError('''location not listed. Please check spelling or try 
+                       again for nearest bigger city''')
+            quit()
+            
+    return lat, lon, elevation
+
+
 def get_googlemap_url(lon, lat, zoom=10):
 
     dmap = DecoratedMap(lat=lat, lon=lon, zoom=zoom,

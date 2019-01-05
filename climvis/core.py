@@ -4,6 +4,7 @@ from tempfile import mkdtemp
 import shutil
 import xarray as xr
 import numpy as np
+import csv
 from motionless import DecoratedMap, LatLonMarker
 from climvis import cfg, graphics
 
@@ -114,6 +115,7 @@ def city_coord(city):
         return lat, lon, elevation
     except UnboundLocalError:
         print('''Location not listed. Please check spelling or try again for nearest bigger city''')
+        quit()
         
 
 def get_googlemap_url(lon, lat, zoom=10):

@@ -3,7 +3,8 @@ import os
 import platform
 import configparser
 
-#cru_dir = '/home/mowglie/disk/OGGM_INPUT/cru/'
+#  cru_dir = '/home/mowglie/disk/OGGM_INPUT/cru/'
+
 
 def get_data_path():
     """ Get data path from .cruvis file in home directory.
@@ -25,7 +26,8 @@ def get_data_path():
     config.read(crufilepath)
     return config['PATH']['cru_dir']
 
-cru_dir = get_data_path()  
+
+cru_dir = get_data_path()
 cru_tmp_file = cru_dir + 'cru_ts4.01.1901.2016.tmp.dat.nc'
 cru_pre_file = cru_dir + 'cru_ts4.01.1901.2016.pre.dat.nc'
 cru_topo_file = cru_dir + 'cru_cl1_topography.nc'

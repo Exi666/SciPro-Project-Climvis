@@ -7,7 +7,8 @@ Created on Sat Dec  1 16:10:03 2018
 
 from bokeh.plotting import figure, show, output_file
 from bokeh import palettes
-from bokeh.models import Range1d
+from bokeh.models import Range1d, DatetimeTickFormatter
+from bokeh.layouts import gridplot
 from math import radians
 import numpy as np
 import pandas as pd
@@ -163,5 +164,53 @@ def plot_windrose(dd, ff, wndspd_units='m/s', spd_bins=None):
     p.x_range = Range1d((-max_cls - max_cls / 4), (max_cls + max_cls / 4))
     p.y_range = Range1d((-max_cls - max_cls / 4), (max_cls + max_cls / 4))
 
-    output_file("plot.html")
+    output_file("windrose.html")
     show(p)
+
+
+def plot_meteo(acdat):
+    """
+    Plot Meteorological Data from ACINN Station
+
+    Input
+    ----------
+    acdat:      AcinnData-Object fom read_acinn.py
+                needs those Methods to be run, before importing:
+                    self.get_data()
+                    self.conv_raw()
+                    self.conv_date()
+                    self.conv_units()
+                    self.make_dict()
+    """
+    # plot Temperature & Dewpoint
+    p1 = figure(x_axis_type="datetime", title="Temperature, Dewpoint")
+    p1.grid.grid_line_alpha = 0.3
+    p1.yaxis.axis_label = acdat.dict['tl']
+    p1.line(acdat.timeutc, acdat.tl, color='red', legend=acdat.dict['tl'])
+    p1.line(acdat.timeutc, acdat.tp, color='green', legend=acdat.dict['tp'])
+    p1.xaxis.formatter = DatetimeTickFormatter(
+            hours=["%d %B %Y"],
+            days=["%d %B %Y"],
+            months=["%d %B %Y"],
+            years=["%d %B %Y"],
+            )
+    p1.xaxis.major_label_orientation = np.pi/4
+
+    # plot Precipitationrate & Precipitation
+    p2 = figure(x_axis_type="datetime",
+                title="Precipitationrate, Precipitation")
+    p2.grid.grid_line_alpha = 0.3
+    p2.yaxis.axis_label = 'Precipitation [mm]'
+    p2.line(acdat.timeutc, acdat.crm, color='blue', legend=acdat.dict['crm'])
+    p2.vbar(x=acdat.timeutc, top=acdat.rr, width=0.9, alpha=0.5)
+    p2.xaxis.formatter = DatetimeTickFormatter(
+            hours=["%d %B %Y"],
+            days=["%d %B %Y"],
+            months=["%d %B %Y"],
+            years=["%d %B %Y"],
+            )
+    p2.xaxis.major_label_orientation = np.pi/4
+    p2.legend.location = "top_left"
+
+    output_file("meteo.html")
+    show(gridplot([[p1], [p2]], plot_width=800, plot_height=400))

@@ -82,7 +82,7 @@ class AcinnData():
         """Dictionary with meaningful names and units"""
         self.dict = {}
         if 'rr' in self.keys:
-            self.dict['rr'] = 'Rainrate [mm/h]'
+            self.dict['rr'] = 'Precipitationrate [mm/h]'
         if 'dd' in self.keys:
             self.dict['dd'] = 'Winddirection [°]'
         if 'tp' in self.keys:
@@ -102,7 +102,7 @@ class AcinnData():
         if 'kmwind' in self.keys:
             self.dict['kmwind'] = 'Windspeed [km/h]'
         if 'rm' in self.keys:
-            self.dict['rm'] = 'Rain [mm]'
+            self.dict['crm'] = 'Cumulated precipitation [mm]'
         if 'sop' in self.keys:
             self.dict['sop'] = 'Sunshine duration [%]'
         if 'rf' in self.keys:

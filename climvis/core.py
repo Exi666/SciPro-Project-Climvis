@@ -105,17 +105,16 @@ def city_coord(city):
                            'elevation': float(row[4])})
     
     for loc in cities:
-        if loc['name'] == city:
+        if loc['name'] == city.lower():
             lat = loc['lat']
             lon = loc['lon']
             elevation = loc['elevation']
-        else:
-            NameError('''location not listed. Please check spelling or try 
-                       again for nearest bigger city''')
-            quit()
-            
-    return lat, lon, elevation
-
+        
+    try:
+        return lat, lon, elevation
+    except UnboundLocalError:
+        print('''Location not listed. Please check spelling or try again for nearest bigger city''')
+        
 
 def get_googlemap_url(lon, lat, zoom=10):
 

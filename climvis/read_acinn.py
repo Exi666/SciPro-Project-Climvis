@@ -37,22 +37,28 @@ class AcinnData():
         url = 'http://acinn.uibk.ac.at/' + self.station + '/' + timestr
         try:
             response = urllib.request.urlopen(url)
+        except urllib.error.HTTPError:
+            raise Exception('could not read from URL')
         except urllib.error.URLError:
             raise Exception('could not read from URL')
-        except urllib.error.HTTPError:
-            raise Exception('maybe station or timespan are wrong')
         self.raw_data = json.loads(response.read().decode())
         self.keys = []
 
     def conv_raw(self):
         """ make data better accessible (.param) """
-        for key in self.raw_data.keys():
-            setattr(self, key, self.raw_data[key])
-            self.keys.append(key)
+        try:
+            for key in self.raw_data.keys():
+                setattr(self, key, self.raw_data[key])
+                self.keys.append(key)
+        except AttributeError:
+            raise Exception('you might have called get_data method first')
 
     def conv_date(self):
         """ date & time conversions """
-        self.datumsec = [x / 1000 for x in self.datumsec]
+        try:
+            self.datumsec = [x / 1000 for x in self.datumsec]
+        except AttributeError:
+            raise Exception('you might have called get_data method first')
         self.timeutc = [datetime.utcfromtimestamp(x) for x in self.datumsec]
         tz = pytz.timezone('Europe/Vienna')
         self.time = [datetime.fromtimestamp(x, tz) for x in self.datumsec]

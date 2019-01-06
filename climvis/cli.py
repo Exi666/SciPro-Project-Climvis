@@ -10,17 +10,12 @@ Usage:
    -v, --version         : print the installed version
    -l, --loc [LON] [LAT] : the location at which the climate data must be
                            extracted
-<<<<<<< HEAD
-   -l, --loc [cityname]  : the city at which the climate data must be
+   -l, --loc [City]      : the location at which the climate data must be
                            extracted
    -m, --meteo [station] [duration]:
                            load meteorological data from ACINN,
                                stations: innsbruck, sattelberg, obergurgl
                                durations: 1, 3, 7 (days)
-=======
-   -l, --loc [City]      : the location at which the climate data must be
-                           extracted
->>>>>>> 0e9e06ae6c6996b72e74fd0e3bd76f1a109989e5
    --no-browser          : the default behavior is to open a browser with the
                            newly generated visualisation. Set to ignore
                            and print the path to the html file instead

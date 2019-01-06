@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+from scipy import stats
 
 def plot_annual_cycle(df, filepath=None):
 
@@ -36,7 +36,8 @@ def plot_time_line(df, filepath=None):
     dfy = df.groupby(df.index.year).mean()
 
     years=dfy.index
-    temp_slope, temp_intercept, temp_rvalue, temp_pvalue, temp_stderr = stats.linregress(years, dfy['tmp'])
+    temp_slope, temp_intercept, temp_rvalue,\
+    temp_pvalue, temp_stderr = stats.linregress(years, dfy['tmp'])
 
     f, ax = plt.subplots(figsize=(6, 4))
 
@@ -45,7 +46,8 @@ def plot_time_line(df, filepath=None):
 
     ax.set_xlabel('Year')
     ax.set_ylabel('Temperature (\u00b0C)')
-    title = 'Temperature time series at location ({}\u00b0, {}\u00b0)\nElevation: {} m a.s.l'
+    title = ('Temperature time series at location ({}\u00b0, '
+            '{}\u00b0)\nElevation: {} m a.s.l')
     plt.title(title.format(df.lon[0], df.lat[0], int(z)), loc='left')
     plt.legend(loc='best')
 

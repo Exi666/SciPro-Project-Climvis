@@ -1,6 +1,7 @@
 # A climate visualization package
 
-**climvis** offers command line tools to display climate data in your browser.
+**climvis** offers command line tools to display climate data and
+meteorological data from ACINN in your browser.
 
 It was written for the University of Innsbruck's
 [scientific programming](http://fabienmaussion.info/scientific_programming)
@@ -14,6 +15,7 @@ Make sure you have all dependencies installed. These are:
 - xarray
 - motionless
 - matplotlib
+- bokeh
 
 Download the package and install it development mode. From the root directory,
 do:

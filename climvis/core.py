@@ -169,26 +169,31 @@ def write_html(lon, lat, directory=None, zoom=None):
 
     # Make the plot
     png = os.path.join(directory, 'annual_cycle.png')
+    png2 = os.path.join(directory, 'time_line.png')
     df = get_cru_timeseries(lon, lat)
 
-    # Catch ValueError due to NaNs and exit program in case it is raised
-    try:
+    # Check for NaNs in DataFrame
+    if not df.isnull().values.any():
         graphics.plot_annual_cycle(df, filepath=png)
+        graphics.plot_time_line(df, filepath=png2)
         outpath = os.path.join(directory, 'index.html')
-
-    except ValueError:
-        print('No data available over the ocean. Try for different location!')
+            with open(cfg.html_tpl, 'r') as infile:
+            lines = infile.readlines()
+            out = []
+            url = get_googlemap_url(lon, lat, zoom=zoom)
+            for txt in lines:
+                txt = txt.replace('[LONLAT]', lonlat_str)
+                txt = txt.replace('[IMGURL]', url)
+                out.append(txt)
+            with open(outpath, 'w') as outfile:
+                outfile.writelines(out)
+        return outpath
+    else:
+        raise Exception('No data available over the ocean. '
+                        'Try for different location!')
         quit()
 
-    with open(cfg.html_tpl, 'r') as infile:
-        lines = infile.readlines()
-        out = []
-        url = get_googlemap_url(lon, lat, zoom=zoom)
-        for txt in lines:
-            txt = txt.replace('[LONLAT]', lonlat_str)
-            txt = txt.replace('[IMGURL]', url)
-            out.append(txt)
-        with open(outpath, 'w') as outfile:
-            outfile.writelines(out)
+
+
 
     return outpath

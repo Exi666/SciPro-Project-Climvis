@@ -10,7 +10,7 @@ Usage:
    -v, --version         : print the installed version
    -l, --loc [LON] [LAT] : the location at which the climate data must be
                            extracted
-   -l, --loc [City]      : the location at which the climate data must be
+   -c, --city [City]      : the location at which the climate data must be
                            extracted
    -m, --meteo [station] [duration]:
                            load meteorological data from ACINN,
@@ -41,39 +41,25 @@ def cruvis_io(args):
         print('License: public domain')
         print('cruvis is provided "as is", without warranty of any kind')
     elif args[0] in ['-l', '--loc']:
-        if len(args) == 1:
-            print('cruvis --loc needs lon and lat parameters or city name!')
-            return
-        elif len(args) == 2:
-            try:
-                lat = float(args[1])
-                print('cruvis --loc needs lon and lat parameters or city '
-                      'name!')
-                return
-            except ValueError:
+        if len(args) < 3:
+            print('cruvis --loc needs lon and lat parameters!')
+        elif len(args) >= 3:
+            lon, lat = float(args[1]), float(args[2])
+            html_path = climvis.write_html(lon, lat)
+            if '--no-browser' in args:
+                print('File successfully generated at: ' + html_path)
+            else:
+                webbrowser.get().open_new_tab(html_path)
+    elif args[0] in ['-c', '--city']:
+        if len(args) < 2:
+            print('cruvis --city needs a city name!')
+        elif len(args) >= 2:
                 lat, lon, elevation = climvis.core.city_coord(args[1])
                 html_path = climvis.write_html(lon, lat)
                 if '--no-browser' in args:
                     print('File successfully generated at: ' + html_path)
                 else:
                     webbrowser.get().open_new_tab(html_path)
-        elif len(args) >= 3:
-            try:
-
-                lon, lat = float(args[1]), float(args[2])
-                html_path = climvis.write_html(lon, lat)
-                if '--no-browser' in args:
-                    print('File successfully generated at: ' + html_path)
-                else:
-                    webbrowser.get().open_new_tab(html_path)
-            except ValueError:
-                if '--no-browser' in args:
-                    lat, lon, elevation = climvis.core.city_coord(args[1])
-                    html_path = climvis.write_html(lon, lat)
-                    print('File successfully generated at: ' + html_path)
-                else:
-                    print('cruvis --loc needs lon and lat parameters '
-                          'or city name!')
     elif args[0] in ['-m', '--meteo']:
         if len(args) < 3:
             print('cruvis --meteo needs station and duration parameters')

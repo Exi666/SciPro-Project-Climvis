@@ -114,9 +114,9 @@ def city_coord(city):
     try:
         return lat, lon, elevation
     except UnboundLocalError:
-        print('''Location not listed. Please check spelling
-              or try again for nearest bigger city''')
-        quit()
+        print('Location not listed. Please check spelling '
+              'or try again for nearest bigger city!')
+        exit()
 
 
 def get_googlemap_url(lon, lat, zoom=10):

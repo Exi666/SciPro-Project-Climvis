@@ -5,13 +5,39 @@ Created on Sat Dec  1 16:10:03 2018
 @author: Birgit Bacher
 """
 
-from bokeh.plotting import figure, show, output_file
+from bokeh.plotting import figure, show, output_file, save
 from bokeh import palettes
 from bokeh.models import Range1d, DatetimeTickFormatter
-from bokeh.layouts import gridplot
+from bokeh.layouts import gridplot, layout
+from bokeh.resources import CDN
 from math import radians
 import numpy as np
 import pandas as pd
+from climvis import read_acinn, core
+from tempfile import mkdtemp
+import os
+
+
+def read_conv_data(station, duration):
+    """
+    Reads and converts data from ACINN
+
+    Input
+    ----------
+    station:    Station for data (innsbruck, sattelberg, obergurgl)
+    duration:   durations: 1, 3, 7 (days)
+
+    Output
+    ----------
+    data:       AcinnData Object with all necessary conversions
+    """
+    data = read_acinn.AcinnData(duration, station)
+    data.get_data()
+    data.conv_raw()
+    data.conv_date()
+    data.conv_units()
+    data.make_dict()
+    return data
 
 
 def speed_labels(bins, units):
@@ -35,7 +61,7 @@ def speed_labels(bins, units):
     return list(labels)
 
 
-def plot_windrose(dd, ff, wndspd_units='m/s', spd_bins=None):
+def plot_windrose(dd, ff, wndspd_units='m/s', spd_bins=None, showp=None):
     """
     Plots Windrose with bokeh
 
@@ -48,6 +74,8 @@ def plot_windrose(dd, ff, wndspd_units='m/s', spd_bins=None):
     ----------
     wndspd_units = 'm/s'
     spd_bins = None         Categories for windspeed - should end with np.inf
+    showp = None            Does not show, save the html, instead of returning
+                            plot handle
 
     """
 
@@ -164,11 +192,14 @@ def plot_windrose(dd, ff, wndspd_units='m/s', spd_bins=None):
     p.x_range = Range1d((-max_cls - max_cls / 4), (max_cls + max_cls / 4))
     p.y_range = Range1d((-max_cls - max_cls / 4), (max_cls + max_cls / 4))
 
-    output_file("windrose.html")
-    show(p)
+    if showp is None:
+        return p
+    else:
+        output_file("windrose.html")
+        show(p)
 
 
-def plot_meteo(acdat):
+def plot_meteo(acdat, showp=None):
     """
     Plot Meteorological Data from ACINN Station
 
@@ -181,9 +212,17 @@ def plot_meteo(acdat):
                     self.conv_date()
                     self.conv_units()
                     self.make_dict()
+    Parameters:
+    ----------
+    showp = None            Does not show, save the html, instead of returning
+                            plot handles
+
     """
     # plot Temperature & Dewpoint
-    p1 = figure(x_axis_type="datetime", title="Temperature, Dewpoint")
+    p1 = figure(x_axis_type="datetime",
+                title="Temperature, Dewpoint",
+                plot_width=800,
+                plot_height=400)
     p1.grid.grid_line_alpha = 0.3
     p1.yaxis.axis_label = acdat.dict['tl']
     p1.line(acdat.timeutc, acdat.tl, color='red', legend=acdat.dict['tl'])
@@ -198,11 +237,14 @@ def plot_meteo(acdat):
 
     # plot Precipitationrate & Precipitation
     p2 = figure(x_axis_type="datetime",
-                title="Precipitationrate, Precipitation")
+                title="Precipitationrate, Precipitation",
+                plot_width=800,
+                plot_height=400)
     p2.grid.grid_line_alpha = 0.3
     p2.yaxis.axis_label = 'Precipitation [mm]'
     p2.line(acdat.timeutc, acdat.crm, color='blue', legend=acdat.dict['crm'])
-    p2.vbar(x=acdat.timeutc, top=acdat.rr, width=0.9, alpha=0.5)
+    p2.vbar(x=acdat.timeutc, top=acdat.rr, width=0.9, alpha=0.5,
+            legend=acdat.dict['rr'])
     p2.xaxis.formatter = DatetimeTickFormatter(
             hours=["%d %B %Y"],
             days=["%d %B %Y"],
@@ -212,5 +254,29 @@ def plot_meteo(acdat):
     p2.xaxis.major_label_orientation = np.pi/4
     p2.legend.location = "top_left"
 
-    output_file("meteo.html")
-    show(gridplot([[p1], [p2]], plot_width=800, plot_height=400))
+    if showp is None:
+        return p1, p2
+    else:
+        output_file("meteo.html")
+        show(gridplot([[p1], [p2]], plot_width=800, plot_height=400))
+
+
+def plot_both(station, duration):
+    """
+    Plots Meteo-Data and Windrose
+
+    Input
+    ----------
+    station:    Station for data (innsbruck, sattelberg, obergurgl)
+    duration:   durations: 1, 3, 7 (days)
+    """
+    data = read_conv_data(station, duration)
+    p1, p2 = plot_meteo(data, showp=None)
+    p3 = plot_windrose(data.dd, data.ff, showp=None)
+    lo = layout([p1], [p2], [p3])
+    directory = mkdtemp()
+    core.mkdir(directory)
+    filename = station + '.html'
+    outpath = os.path.join(directory, filename)
+    save(lo, filename=outpath, title=station, resources=CDN)
+    return outpath

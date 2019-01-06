@@ -35,9 +35,19 @@ def test_print_html(capsys):
     captured = capsys.readouterr()
     assert 'File successfully generated at:' in captured.out
 
+    cruvis_io(['-m', 'innsbruck', '7', '--no-browser'])
+    captured = capsys.readouterr()
+    assert 'File successfully generated at:' in captured.out
+
 
 def test_error(capsys):
 
     cruvis_io(['-l', '12.1'])
     captured = capsys.readouterr()
-    assert 'cruvis --loc needs lon and lat parameters!' in captured.out
+    string = 'cruvis --loc needs lon and lat parameters or city name!'
+    assert string in captured.out
+
+    cruvis_io(['-m', 'xxx'])
+    captured = capsys.readouterr()
+    string = 'cruvis --meteo needs station and duration parameters'
+    assert string in captured.out

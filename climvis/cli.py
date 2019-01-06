@@ -14,7 +14,8 @@ Usage:
                            extracted
    -m, --meteo [station] [duration]:
                            load meteorological data from ACINN,
-                               stations: innsbruck, sattelberg, obergurgl
+                               stations: innsbruck, sattelberg, obergurgl,
+                                         ellboegen
                                durations: 1, 3, 7 (days)
    --no-browser          : the default behavior is to open a browser with the
                            newly generated visualisation. Set to ignore

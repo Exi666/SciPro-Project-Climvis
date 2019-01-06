@@ -24,7 +24,7 @@ def read_conv_data(station, duration):
 
     Input
     ----------
-    station:    Station for data (innsbruck, sattelberg, obergurgl)
+    station:    Station for data (innsbruck, sattelberg, obergurgl, ellboegen)
     duration:   durations: 1, 3, 7 (days)
 
     Output
@@ -226,7 +226,12 @@ def plot_meteo(acdat, showp=None):
     p1.grid.grid_line_alpha = 0.3
     p1.yaxis.axis_label = acdat.dict['tl']
     p1.line(acdat.timeutc, acdat.tl, color='red', legend=acdat.dict['tl'])
-    p1.line(acdat.timeutc, acdat.tp, color='green', legend=acdat.dict['tp'])
+    try:
+        p1.line(acdat.timeutc, acdat.tp,
+                color='green',
+                legend=acdat.dict['tp'])
+    except AttributeError:
+        print('No dewpoint data at this station availabe, skipping display')
     p1.xaxis.formatter = DatetimeTickFormatter(
             hours=["%d %B %Y"],
             days=["%d %B %Y"],
@@ -241,10 +246,16 @@ def plot_meteo(acdat, showp=None):
                 plot_width=800,
                 plot_height=400)
     p2.grid.grid_line_alpha = 0.3
-    p2.yaxis.axis_label = 'Precipitation [mm]'
-    p2.line(acdat.timeutc, acdat.crm, color='blue', legend=acdat.dict['crm'])
-    p2.vbar(x=acdat.timeutc, top=acdat.rr, width=0.9, alpha=0.5,
-            legend=acdat.dict['rr'])
+    try:
+        p2.yaxis.axis_label = 'Precipitation [mm]'
+        p2.line(acdat.timeutc, acdat.crm,
+                color='blue',
+                legend=acdat.dict['crm'])
+        p2.vbar(x=acdat.timeutc, top=acdat.rr, width=0.9, alpha=0.5,
+                legend=acdat.dict['rr'])
+    except AttributeError:
+        print("No precipitation data at this station availabe, ",
+              "skipping display")
     p2.xaxis.formatter = DatetimeTickFormatter(
             hours=["%d %B %Y"],
             days=["%d %B %Y"],
@@ -267,7 +278,7 @@ def plot_both(station, duration):
 
     Input
     ----------
-    station:    Station for data (innsbruck, sattelberg, obergurgl)
+    station:    Station for data (innsbruck, sattelberg, obergurgl, ellboegen)
     duration:   durations: 1, 3, 7 (days)
     """
     data = read_conv_data(station, duration)

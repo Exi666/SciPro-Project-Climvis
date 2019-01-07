@@ -176,7 +176,7 @@ def write_html(lon, lat, directory=None, zoom=None):
         graphics.plot_annual_cycle(df, filepath=png)
         graphics.plot_time_line(df, filepath=png2)
         outpath = os.path.join(directory, 'index.html')
-            with open(cfg.html_tpl, 'r') as infile:
+        with open(cfg.html_tpl, 'r') as infile:
             lines = infile.readlines()
             out = []
             url = get_googlemap_url(lon, lat, zoom=zoom)

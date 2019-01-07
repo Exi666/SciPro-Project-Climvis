@@ -10,7 +10,7 @@ Usage:
    -v, --version         : print the installed version
    -l, --loc [LON] [LAT] : the location at which the climate data must be
                            extracted
-   -c, --city [City]      : the location at which the climate data must be
+   -c, --city [City]     : the location at which the climate data must be
                            extracted
    -m, --meteo [station] [duration]:
                            load meteorological data from ACINN,

@@ -114,9 +114,8 @@ def city_coord(city):
     try:
         return lat, lon, elevation
     except UnboundLocalError:
-        print('Location not listed. Please check spelling '
-              'or try again for nearest bigger city!')
-        exit()
+        raise NameError('Location not listed. Please check spelling '
+                        'or try again for nearest bigger city!')
 
 
 def get_googlemap_url(lon, lat, zoom=10):
@@ -189,11 +188,5 @@ def write_html(lon, lat, directory=None, zoom=None):
                 outfile.writelines(out)
         return outpath
     else:
-        raise Exception('No data available over the ocean. '
-                        'Try for different location!')
-        quit()
-
-
-
-
-    return outpath
+        raise ValueError('No data available over the ocean. '
+                         'Try for different location!')

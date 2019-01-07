@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from scipy import stats
 
+
 def plot_annual_cycle(df, filepath=None):
 
     z = df.grid_point_elevation
@@ -18,7 +19,8 @@ def plot_annual_cycle(df, filepath=None):
     df['tmp'].plot(ax=ax, color='C3', label='Temperature')
     ax.set_ylabel('Temperature (\u00b0C)', color='C3')
     ax.tick_params('y', colors='C3')
-    title = 'Climate diagram at location ({}\u00b0, {}\u00b0)\nElevation: {} m a.s.l'
+    title = 'Climate diagram at location ({}\u00b0,' \
+            ' {}\u00b0)\nElevation: {} m a.s.l'
     plt.title(title.format(df.lon[0], df.lat[0], int(z)),
               loc='left')
     plt.tight_layout()
@@ -29,25 +31,27 @@ def plot_annual_cycle(df, filepath=None):
 
     return f
 
+
 # Plot time series of temperature and linear trend
 def plot_time_line(df, filepath=None):
 
     z = df.grid_point_elevation
     dfy = df.groupby(df.index.year).mean()
 
-    years=dfy.index
+    years = dfy.index
     temp_slope, temp_intercept, temp_rvalue,\
-    temp_pvalue, temp_stderr = stats.linregress(years, dfy['tmp'])
+        temp_pvalue, temp_stderr = stats.linregress(years, dfy['tmp'])
 
     f, ax = plt.subplots(figsize=(6, 4))
 
     plt.plot(years, dfy['tmp'], 'b', label='annual mean')
-    plt.plot(years, temp_intercept + temp_slope * years, 'r', label='linear trend')
+    plt.plot(years, temp_intercept + temp_slope * years, 'r',
+             label='linear trend')
 
     ax.set_xlabel('Year')
     ax.set_ylabel('Temperature (\u00b0C)')
     title = ('Temperature time series at location ({}\u00b0, '
-            '{}\u00b0)\nElevation: {} m a.s.l')
+             '{}\u00b0)\nElevation: {} m a.s.l')
     plt.title(title.format(df.lon[0], df.lat[0], int(z)), loc='left')
     plt.legend(loc='best')
 
@@ -56,4 +60,3 @@ def plot_time_line(df, filepath=None):
         plt.close()
 
     return f
-

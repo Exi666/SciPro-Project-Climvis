@@ -1,6 +1,7 @@
 from urllib.request import Request, urlopen
 import json
 import os
+import pytest
 import numpy as np
 import pandas as pd
 
@@ -48,6 +49,18 @@ def test_get_ts():
     assert np.abs(dfm.ref - dfm.tmp_cor) < np.abs(dfm.ref - dfm.tmp)
 
 
+def test_city_coord():
+
+    # test that city is found even if capital letters in between
+    lat, lon, elevation = core.city_coord('InnSBruck')
+    assert lat == 47.2666667
+    assert lon == 11.3999996
+
+    # test that not listed names result in NameError
+    with pytest.raises(NameError, match='Location not listed. '):
+        lat, lon, elevation = core.city_coord('InnSBruc')
+
+
 def test_get_url():
 
     df_cities = pd.read_csv(cfg.world_cities)
@@ -67,3 +80,8 @@ def test_write_html(tmpdir):
     dir = str(tmpdir.join('html_dir'))
     core.write_html(dfi.Lon, dfi.Lat, directory=dir)
     assert os.path.isdir(dir)
+
+    # test for location over the ocean
+    string = 'No data available over the ocean. '
+    with pytest.raises(ValueError, match=string):
+        core.write_html(47, 12, directory=dir)

@@ -5,11 +5,12 @@ import numpy as np
 from climvis.read_acinn import AcinnData
 import random
 from bokeh.plotting.figure import Figure
+import os
 
 
 def test_read_conv_data():
 
-    data = plot_acinn.read_conv_data('innsbruck', 7)
+    data = plot_acinn.read_conv_data('innsbruck', 1)
     assert isinstance(data, AcinnData)
 
 
@@ -30,7 +31,14 @@ def test_plot_windrose():
 
 
 def test_plot_meteo():
-#  todo
+
+    data = plot_acinn.read_conv_data('innsbruck', 1)
+    p1, p2 = plot_acinn.plot_meteo(data, showp=None)
+    assert isinstance(p1, Figure)
+    assert isinstance(p2, Figure)
+
 
 def test_plot_both():
-#  todo
+
+    outpath = plot_acinn.plot_both('innsbruck', 1)
+    assert os.path.exists(outpath)

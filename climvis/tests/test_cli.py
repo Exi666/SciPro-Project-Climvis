@@ -34,7 +34,7 @@ def test_print_html(capsys):
     cruvis_io(['-l', '12.1', '47.3', '--no-browser'])
     captured = capsys.readouterr()
     assert 'File successfully generated at:' in captured.out
-    
+
     cruvis_io(['-c', 'InnsBruck', '--no-browser'])
     captured = capsys.readouterr()
     assert 'File successfully generated at:' in captured.out
@@ -48,9 +48,9 @@ def test_error(capsys):
 
     cruvis_io(['-l', '12.1'])
     captured = capsys.readouterr()
-    string = 'cruvis --loc needs lon and lat parameters or city name!'
+    string = 'cruvis --loc needs lon and lat parameters!'
     assert string in captured.out
-    
+
     cruvis_io(['-c'])
     captured = capsys.readouterr()
     string = 'cruvis --city needs a city name!'

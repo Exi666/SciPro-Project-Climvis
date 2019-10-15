@@ -8,7 +8,7 @@ import csv
 from motionless import DecoratedMap, LatLonMarker
 from climvis import cfg, graphics
 
-GOOGLE_API_KEY = 'AIzaSyAjPH6t6Y2OnPDNHesGFvTaVzaaFWj_WCE'
+GOOGLE_API_KEY = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 
 def haversine(lon1, lat1, lon2, lat2):
